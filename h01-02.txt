@@ -1,0 +1,115 @@
+loon faili
+sqlite3 epood_aratt.db
+
+ühendan andmebaasid
+sqlite> ATTACH DATABASE 'epood_aratt.db' as 'epood_aratt';
+
+TEEN TABELI ERINEVATE VEERGUDEGA
+sqlite> CREATE TABLE epood_aratt.aratt(
+(x1...> id INTEGER PRIMARY KEY AUTOINCREMENT,
+(x1...> first_name VARCHAR(255) NOT NULL,
+(x1...> last_name VARACHAR(255) NOT NULL,
+(x1...> email VARCHAR(255) NOT NULL,
+(x1...> car_make VARCHAR(255) NOT NULL,
+(x1...> car_model VARCHAR(255) NOT NULL,
+(x1...> car_year YEAR,
+(x1...> car_price DECIMAL(10,2));
+
+sisestan andmed
+sqlite> INSERT INTO aratt(id,first_name,last_name,email,car_make,car_model,car_year,car_price)
+   ...> VALUES(1,'Aksel','Ratt','akselratt.ar@gmail.com','BMW','E30',2004,1000.13);
+
+sqlite> INSERT INTO aratt(first_name,last_name,email,car_make,car_model,car_year,car_price)
+   ...> VALUES('Mario','Metshein','metshein@gmail.com','Volkswagen','Golf',1999,724);
+
+sqlite> INSERT INTO aratt(first_name,last_name,email,car_make,car_model,car_year,car_price)
+   ...> VALUES('Artjom','Vinogradov','artjomka@gmail.com','Toyota','Corolla',1999,300.99);
+sqlite> SELECT * FROM aratt;
+
+tabel
+1|Aksel|Ratt|akselratt.ar@gmail.com|BMW|E30|2004|1000.13
+2|Mario|Metshein|metshein@gmail.com|Volkswagen|Golf|1999|724
+3|Artjom|Vinogradov|artjomka@gmail.com|Toyota|Corolla|1999|300.99
+
+.mode csv
+.import /Users/it21/Downloads/MOCK_DATA.csv aratt
+
+Harjutus 2
+Muuda enda lisatud automargiks Zaporožets
+sqlite> UPDATE aratt
+   ...> SET car_make = 'Zaparožets'
+   ...> WHERE id = 1;
+sqlite> SELECT * FROM aratt WHERE id = 1;
+1,Aksel,Ratt,akselratt.ar@gmail.com,"Zaparožets",E30,2004,1000.13
+
+Muuda kõik Cadillac margid Citroën’iks
+sqlite> UPDATE aratt
+   ...> SET car_make = 'Citroen'
+   ...> WHERE car_make = 'Cadillac';
+
+Kustuta ära read, mille ID on 5, 10 ja 15
+sqlite> DELETE FROM aratt
+   ...> WHERE id = 5;
+sqlite> DELETE FROM aratt
+   ...> WHERE id = 10;
+sqlite> DELETE FROM aratt
+   ...> WHERE id = 15;
+sqlite> SELECT * FROM aratt LIMIT 20;
+1,Aksel,Ratt,akselratt.ar@gmail.com,"Zaparožets",E30,2004,1000.13
+2,Mario,Metshein,metshein@gmail.com,Volkswagen,Golf,1999,724
+3,Artjom,Vinogradov,artjomka@gmail.com,Toyota,Corolla,1999,300.99
+4,Saidee,Inglesfield,singlesfield3@samsung.com,Ford,"LTD Crown Victoria",1985,51604.68
+6,Dagmar,Hilley,dhilley5@mysql.com,GMC,"Sierra 1500",2012,1048.86
+7,Hannis,McGurn,hmcgurn6@mac.com,Mercedes-Benz,CL-Class,1998,76220.44
+8,Aurora,Kerry,akerry7@imageshack.us,Acura,Vigor,1992,15634.39
+9,Ealasaid,Gludor,egludor8@fc2.com,Buick,Verano,2012,31369.24
+11,Marys,Lewington,mlewingtona@diigo.com,Pontiac,GTO,2004,76753.09
+12,Alika,Rudkin,arudkinb@walmart.com,Buick,LeSabre,1999,51714.17
+13,Gisele,Fishwick,gfishwickc@topsy.com,Mercedes-Benz,C-Class,2010,39597.77
+14,Abdul,Birkin,abirkind@yelp.com,Saab,9000,1988,13145.31
+16,Koral,Briereton,kbrieretonf@cisco.com,Hyundai,"Santa Fe",2005,29691.26
+17,Anitra,Floweth,aflowethg@example.com,GMC,"Envoy XL",2003,34809.64
+18,Annadiane,Duddell,aduddellh@de.vu,Acura,RL,1999,42326.1
+19,Carolyn,Hallan,challani@squarespace.com,Nissan,Murano,2012,59204.73
+20,Brittany,Mulbery,bmulberyj@noaa.gov,Mercury,Capri,1986,13913.9
+21,Cassondra,MacNab,cmacnabk@trellian.com,Dodge,Viper,2008,30801.05
+22,Amby,Conybear,aconybearl@nytimes.com,Chevrolet,Silverado,2010,59298.37
+23,Claresta,Lougheed,clougheedm@bbc.co.uk,Toyota,Camry,2008,52749.39
+
+
+Kuva read, kus on ainult ID, perenimi, automark ja aasta, sorteeri ID järgi kasvavalt
+sqlite> SELECT id, last_name, car_model, car_year FROM aratt LIMIT 20;
+1,Ratt,E30,2004
+2,Metshein,Golf,1999
+3,Vinogradov,Corolla,1999
+4,Inglesfield,"LTD Crown Victoria",1985
+6,Hilley,"Sierra 1500",2012
+7,McGurn,CL-Class,1998
+8,Kerry,Vigor,1992
+9,Gludor,Verano,2012
+11,Lewington,GTO,2004
+12,Rudkin,LeSabre,1999
+13,Fishwick,C-Class,2010
+14,Birkin,9000,1988
+16,Briereton,"Santa Fe",2005
+17,Floweth,"Envoy XL",2003
+18,Duddell,RL,1999
+19,Hallan,Murano,2012
+20,Mulbery,Capri,1986
+21,MacNab,Viper,2008
+22,Conybear,Silverado,2010
+23,Lougheed,Camry,2008
+
+
+Kuva 10 rida autosid, kus kliendi perenimi hakkab sama algustähega, mis sul, sorteeri autod aasta järgi kahanevalt
+sqlite> SELECT * FROM aratt WHERE first_name LIKE 'l%' ORDER BY car_year DESC LIMIT 10;
+396,Loren,Garritley,lgarritleyaz@issuu.com,Volkswagen,Golf,2012,39786.78
+541,Lane,Piatto,lpiattof0@typepad.com,Nissan,370Z,2012,80308.87
+989,Linn,Yanez,lyanezrg@google.co.jp,Maybach,57,2011,40687.48
+186,Luca,Bonson,lbonson55@bloglovin.com,"Aston Martin",Rapide,2010,94444.06
+298,Laurianne,Trenear,ltrenear89@cornell.edu,Ford,E150,2009,31120.9
+300,Lexine,Grumley,lgrumley8b@1und1.de,Acura,TL,2009,47169.09
+510,Lowell,Korejs,lkorejse5@fc2.com,Lexus,IS,2009,42526.4
+637,Lock,Pettet,lpettetho@dailymotion.com,Jeep,Compass,2009,58072.63
+827,Leonhard,Verheyden,lverheydenmy@nyu.edu,Acura,MDX,2009,83141.34
+313,Luke,Yesenev,lyesenev8o@rakuten.co.jp,Citroen,"Escalade ESV",2006,49136.52
